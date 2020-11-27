@@ -1,15 +1,27 @@
-import React, { useState, useEffect } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import { Container, Row, Col } from "reactstrap";
+import UserTodos from "../../components/UserTodos/UserTodos";
 import axios from "axios";
 
 const MainList = () => {
+  const [users, setUsers] = useState([]);
+
   useEffect(() => {
-    axios.get("/api/users/").then(({ data }) => console.log(data));
-  }, []);
+    axios.get("/api/users/").then(({ data }) => setUsers(data));
+  }, [axios]);
 
   return (
-    <div>
-      <h1>Barriletes!</h1>
-    </div>
+    <Fragment>
+      <Container fluid="md">
+        <Row>
+          <Col md={{ size: 8, offset: 2 }}>
+            {users.map((user, id) => {
+              return <UserTodos user={user} todos={user.todos} key={id} />;
+            })}
+          </Col>
+        </Row>
+      </Container>
+    </Fragment>
   );
 };
 
