@@ -1,24 +1,36 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Container, Row, Col } from "reactstrap";
+import { Container, Row, Col } from "react-bootstrap";
 import UserTodos from "../../components/UserTodos/UserTodos";
+import AddTask from "../../components/AddTask/AddTask";
 import axios from "axios";
 
 const MainList = () => {
   const [users, setUsers] = useState([]);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
     axios.get("/api/users/").then(({ data }) => setUsers(data));
-  }, [axios]);
+  }, []);
 
   return (
     <Fragment>
-      <Container fluid="md">
-        <Row>
-          <Col md={{ size: 8, offset: 2 }}>
-            {users.map((user, id) => {
-              return <UserTodos user={user} todos={user.todos} key={id} />;
-            })}
-          </Col>
+      <AddTask show={show} onClose={handleClose} />
+      <Container>
+        <Row className="justify-content-md-center">
+          {users.map((user, id) => {
+            return (
+              <Col md={6} key={id}>
+                <UserTodos
+                  user={user}
+                  todos={user.todos}
+                  clickAdd={handleShow}
+                />
+              </Col>
+            );
+          })}
         </Row>
       </Container>
     </Fragment>
