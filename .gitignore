@@ -1,8 +1,14 @@
-backend/db.sqlite3
-backend/todo/migrations/0004_auto_20201126_1918.py
-
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# PYTHON
+backend/db.sqlite3
+backend/todo/migrations/0004_auto_20201126_1918.py
+backend/todo/migrations/__pycache__
+backend/todo/__pycache__
+backend/backend/__pycache__
+
+# REACT
+frontend/.eslintcache
 # dependencies
 frontend/node_modules
 frontend/.pnp
