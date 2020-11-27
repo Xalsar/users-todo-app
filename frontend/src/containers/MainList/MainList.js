@@ -5,6 +5,7 @@ import AddTask from "../../components/AddTask/AddTask";
 import axios from "axios";
 
 const MainList = () => {
+  const [newTodo, setNewTodo] = useState("INITIAL");
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
   const [userId, setUserId] = useState();
@@ -16,15 +17,27 @@ const MainList = () => {
   };
 
   useEffect(() => {
+    if (!newTodo && newTodo !== "INITIAL") {
+      return;
+    }
+
     axios
       .get("/api/users/")
-      .then(({ data }) => setUsers(data))
+      .then(({ data }) => {
+        setNewTodo(false);
+        setUsers(data);
+      })
       .catch((e) => console.log(e));
-  }, []);
+  }, [newTodo]);
 
   return (
     <Fragment>
-      <AddTask show={show} onClose={handleClose} userId={userId} />
+      <AddTask
+        show={show}
+        onClose={handleClose}
+        onSucceed={() => setNewTodo(true)}
+        userId={userId}
+      />
       <Container>
         <Row className="justify-content-md-center">
           {users.map((user, id) => {
