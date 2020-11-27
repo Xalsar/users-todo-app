@@ -7,17 +7,24 @@ import axios from "axios";
 const MainList = () => {
   const [users, setUsers] = useState([]);
   const [show, setShow] = useState(false);
+  const [userId, setUserId] = useState();
 
   const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const handleShow = (id) => {
+    setUserId(id);
+    setShow(true);
+  };
 
   useEffect(() => {
-    axios.get("/api/users/").then(({ data }) => setUsers(data));
+    axios
+      .get("/api/users/")
+      .then(({ data }) => setUsers(data))
+      .catch((e) => console.log(e));
   }, []);
 
   return (
     <Fragment>
-      <AddTask show={show} onClose={handleClose} />
+      <AddTask show={show} onClose={handleClose} userId={userId} />
       <Container>
         <Row className="justify-content-md-center">
           {users.map((user, id) => {
