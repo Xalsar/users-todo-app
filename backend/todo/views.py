@@ -37,4 +37,5 @@ def list_users(request):
 
         user.save()
 
-        return JsonResponse(UserSerializer(user), safe=False)
+        userSerialized = UserSerializer(user)
+        return JsonResponse(userSerialized.data, safe=False)
