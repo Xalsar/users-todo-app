@@ -7,7 +7,7 @@ const UserTodos = ({ user, todos, clickAdd }) => {
     <div className="px-3 py-4">
       <h2 className="text-left mb-3">
         {user.name}
-        <Button className="ml-3 px-2 py-1" onClick={() => clickAdd()}>
+        <Button className="ml-3 px-2 py-1" onClick={() => clickAdd(user.id)}>
           <Plus size={25} />
         </Button>
       </h2>
