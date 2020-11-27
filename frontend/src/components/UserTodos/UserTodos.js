@@ -1,29 +1,30 @@
 import React from "react";
+import { Button, ListGroup, Badge } from "react-bootstrap";
 import { Plus } from "react-bootstrap-icons";
 
-const UserTodos = ({ user, todos }) => {
+const UserTodos = ({ user, todos, clickAdd }) => {
   return (
-    <div className="jumbotron py-3 bg-transparent">
+    <div className="px-3 py-4">
       <h2 className="text-left mb-3">
         {user.name}
-        <button type="button" class="btn btn-primary ml-3 px-2 py-1">
+        <Button className="ml-3 px-2 py-1" onClick={() => clickAdd()}>
           <Plus size={25} />
-        </button>
+        </Button>
       </h2>
-      <ul className="list-group">
+      <ListGroup>
         {todos.map((todo, id) => {
           return (
-            <li className="list-group-item list-group-item-action text-left">
+            <ListGroup.Item action className="text-left" key={id}>
               {todo.title}
               {todo.completed && (
-                <span class="badge badge-pill badge-success ml-2">
+                <Badge className="badge-pill badge-success ml-2">
                   Completed
-                </span>
+                </Badge>
               )}
-            </li>
+            </ListGroup.Item>
           );
         })}
-      </ul>
+      </ListGroup>
     </div>
   );
 };
