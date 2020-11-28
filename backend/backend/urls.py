@@ -19,6 +19,7 @@ from rest_framework import routers
 from todo import views
 
 urlpatterns = [
-    url(r'^api/users', views.list_users),
+    url(r'^api/users', views.users),
+    url(r'^api/todo/update', views.updateTodo),
     url(r'^admin/', admin.site.urls),
 ]

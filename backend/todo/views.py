@@ -11,7 +11,7 @@ from .serializers import UserSerializer, TodoSerializer
 
 
 @api_view(['GET', 'POST'])
-def list_users(request):
+def users(request):
     if request.method == 'GET':
         users = User.objects.all()
         usersSerialized = UserSerializer(users, many=True)
@@ -24,7 +24,7 @@ def list_users(request):
             todoData["description"]
             todoData["userId"]
         except:
-            return JsonResponse({'message': 'User does not exist'}, status=status.HTTP_400_BAD_REQUEST)
+            return JsonResponse({'message': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
             user = User.objects.get(pk=todoData['userId'])
@@ -39,3 +39,30 @@ def list_users(request):
 
         userSerialized = UserSerializer(user)
         return JsonResponse(userSerialized.data, safe=False)
+
+
+@api_view(['POST'])
+def updateTodo(request):
+    todoData = JSONParser().parse(request)
+
+    try:
+        todoData["id"]
+        todoData["title"]
+        todoData["description"]
+        todoData["completed"]
+    except:
+        return JsonResponse({'message': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
+
+    try:
+        todo = Todo.objects.get(id=todoData["id"])
+    except Todo.DoesNotExist:
+        return JsonResponse({'message': 'Todo does not exist'}, status=status.HTTP_404_NOT_FOUND)
+
+    todo.title = todoData["title"]
+    todo.description = todoData["description"]
+    todo.completed = todoData["completed"]
+
+    todo.save()
+
+    todoSerialized = TodoSerializer(todo)
+    return JsonResponse(todoSerialized.data, safe=False)
