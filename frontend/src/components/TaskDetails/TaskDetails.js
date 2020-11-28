@@ -8,43 +8,48 @@ const FORM_STATES = {
   VALIDATED: "VALIDATED",
 };
 
-const AddTask = ({ show, onClose, user, onSucceed }) => {
+const TaskDetails = ({ task, show, onClose, onSucceed }) => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [completed, setCompleted] = useState(false);
   const [formSatate, setFormState] = useState(FORM_STATES.INITIAL);
 
   useEffect(() => {
-    setTitle("");
-    setDescription("");
+    setTitle(task.title);
+    setDescription(task.description);
+    setCompleted(task.completed);
     setFormState(FORM_STATES.INITIAL);
-  }, [user]);
+  }, [task]);
 
-  const saveTask = () => {
+  const updateTask = () => {
     axios
-      .post("/api/users/", {
+      .post("/api/todo/update", {
+        id: task.id,
         title,
         description,
-        userId: user.id,
+        completed,
       })
       .then(() => {
         onSucceed();
         onClose();
       })
       .catch((e) => console.log(e));
+
     setFormState(FORM_STATES.LOADING);
   };
 
   return (
-    <Modal show={show} onHide={onClose} size="lg">
+    <Modal size="lg" show={show} onHide={onClose}>
       <Modal.Header closeButton>
         <Modal.Title>Add new Task</Modal.Title>
       </Modal.Header>
       <Modal.Body>
         <Form validated={formSatate === FORM_STATES.VALIDATED}>
-          <Form.Group controlId="addTask.Title">
+          <Form.Group controlId="editTask.Title">
             <Form.Label>Title</Form.Label>
             <Form.Control
               value={title}
+              placeholder={title}
               onChange={(e) => setTitle(e.target.value)}
               type="text"
               required
@@ -54,10 +59,11 @@ const AddTask = ({ show, onClose, user, onSucceed }) => {
               Please, provide a title
             </Form.Control.Feedback>
           </Form.Group>
-          <Form.Group controlId="addTask.Description">
+          <Form.Group controlId="editTask.Description">
             <Form.Label>Description</Form.Label>
             <Form.Control
               value={description}
+              placeholder={description}
               onChange={(e) => setDescription(e.target.value)}
               as="textarea"
               rows={3}
@@ -67,6 +73,15 @@ const AddTask = ({ show, onClose, user, onSucceed }) => {
             <Form.Control.Feedback type="invalid">
               Please, provide a description
             </Form.Control.Feedback>
+          </Form.Group>
+          <Form.Group controlId="editTask.Completed">
+            <Form.Check
+              checked={completed}
+              onChange={() => setCompleted(!completed)}
+              type="checkbox"
+              label="Completed"
+              disabled={formSatate === FORM_STATES.LOADING}
+            />
           </Form.Group>
         </Form>
       </Modal.Body>
@@ -90,7 +105,7 @@ const AddTask = ({ show, onClose, user, onSucceed }) => {
             onClick={() => {
               setFormState(FORM_STATES.VALIDATED);
               if (title && description) {
-                saveTask();
+                updateTask();
               }
             }}
           >
@@ -102,4 +117,4 @@ const AddTask = ({ show, onClose, user, onSucceed }) => {
   );
 };
 
-export default AddTask;
+export default TaskDetails;
