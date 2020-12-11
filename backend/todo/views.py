@@ -17,22 +17,24 @@ def users(request):
         usersSerialized = UserSerializer(users, many=True)
         return JsonResponse(usersSerialized.data, safe=False)
     if request.method == 'POST':
-        todoData = JSONParser().parse(request)
+        title = request.data["title"]
+        description = request.data["description"]
+        userId = request.data["userId"]
 
         try:
-            todoData["title"]
-            todoData["description"]
-            todoData["userId"]
+            title
+            description
+            userId
         except:
             return JsonResponse({'message': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
         try:
-            user = User.objects.get(pk=todoData['userId'])
+            user = User.objects.get(pk=userId)
         except User.DoesNotExist:
             return JsonResponse({'message': 'User does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
         user.todos.create(
-            title=todoData["title"], description=todoData["description"]
+            title=title, description=description
         )
 
         user.save()
@@ -43,24 +45,27 @@ def users(request):
 
 @api_view(['POST'])
 def updateTodo(request):
-    todoData = JSONParser().parse(request)
+    id = request.data["id"]
+    title = request.data["title"]
+    description = request.data["description"]
+    completed = request.data["completed"]
 
     try:
-        todoData["id"]
-        todoData["title"]
-        todoData["description"]
-        todoData["completed"]
+        id
+        title
+        description
+        completed
     except:
         return JsonResponse({'message': 'Bad request'}, status=status.HTTP_400_BAD_REQUEST)
 
     try:
-        todo = Todo.objects.get(id=todoData["id"])
+        todo = Todo.objects.get(id=id)
     except Todo.DoesNotExist:
         return JsonResponse({'message': 'Todo does not exist'}, status=status.HTTP_404_NOT_FOUND)
 
-    todo.title = todoData["title"]
-    todo.description = todoData["description"]
-    todo.completed = todoData["completed"]
+    todo.title = title
+    todo.description = description
+    todo.completed = completed
 
     todo.save()
 
