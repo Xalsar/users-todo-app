@@ -21,5 +21,7 @@ from todo import views
 urlpatterns = [
     url(r'^api/users', views.users),
     url(r'^api/todo/update', views.updateTodo),
+    url(r'^api/progress/set', views.start_process),
+    url(r'^api/progress/check', views.check_status),
     url(r'^admin/', admin.site.urls),
 ]

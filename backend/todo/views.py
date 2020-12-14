@@ -6,6 +6,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework import status
 from .models import User, Todo
 from .serializers import UserSerializer, TodoSerializer
+from .tasks import do_work
+from celery.result import AsyncResult
 
 # Users
 
@@ -71,3 +73,15 @@ def updateTodo(request):
 
     todoSerialized = TodoSerializer(todo)
     return JsonResponse(todoSerialized.data, safe=False)
+
+@api_view(['POST'])
+def start_process(request):
+    job = do_work.delay()
+    return JsonResponse({"id":job.id}, safe=False)
+
+@api_view(['POST'])
+def check_status(request):
+    job = AsyncResult(request.data["taskId"])
+    print(job.result)
+    print(job.state)
+    return JsonResponse({'result': job.result, 'state': job.state}, safe=False)
