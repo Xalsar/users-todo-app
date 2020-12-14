@@ -123,3 +123,5 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 CORS_ORIGIN_WHITELIST = ["http://localhost:3000"]
+
+CELERY_BROKER_URL = 'pyamqp://guest@localhost//'
